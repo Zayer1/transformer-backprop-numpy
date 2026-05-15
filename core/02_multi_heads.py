@@ -19,8 +19,19 @@ tokens = [vocab[word] for word in sentence]
 vocab_size = len(vocab)
 embedding_dim = 6 #we update this to 6
 
-#Positional embedding matrix
-P = np.random.randn(len(sentence),embedding_dim) #The reason we picked this is so the model can automate the dimensions better
+# ==========================================
+# POSITIONAL EMBEDDINGS (The Time Stamps)
+# ==========================================
+# The Problem: Matrix multiplication doesn't care about order. 
+# If 'cat' = [1, 2] and 'dog' = [3, 4], their dot product is always 11. 
+# Whether the sentence is "cat chases dog" or "dog chases cat", the math is 100% identical.
+# The network is completely blind to time.
+# 
+# The Solution: We create a dedicated "Position Vector" for each slot in the sentence.
+# Position 1 gets its own vector, Position 2 gets its own vector, etc.
+# Instead of hard-coding these vectors using complex math (like the original paper), 
+# we start them as random numbers and let the calculus figure out the optimal values!
+P = np.random.randn(len(sentence),embedding_dim)
 
 # ==========================================
 # THE CAUSAL MASK (The "Blindfold")
@@ -65,7 +76,19 @@ W_k = np.random.randn(embedding_dim, embedding_dim)
 W_v = np.random.randn(embedding_dim, embedding_dim)
 
 for epoch in range(1000):
-    # The Lookup (3, 6) + positional timestamp
+    # -------------------------------------------------------------------------
+    # THE ADDITION: Word Meaning + Time Stamp
+    # -------------------------------------------------------------------------
+    # Why do we ADD (E + P) instead of gluing them together (concatenating)?
+    # 1. Math Cost: Gluing a 6-number word and a 6-number position makes a 12-number array. 
+    #    This would double the size of all our matrices (W_q, W_k, W_v) and make training incredibly slow.
+    # 
+    # 2. How Addition works here: Imagine a 2D graph. The word "Cat" is at coordinates (x=100, y=100).
+    #    If we add the Position 1 vector (x=1, y=0), Cat becomes (101, 100).
+    #    If we add the Position 2 vector (x=0, y=1), Cat becomes (100, 101).
+    #    When this new mixed coordinate hits our weight matrix (W_q), the matrix multiplication 
+    #    is mathematically capable of separating the massive base number (100) from the tiny 
+    #    shift (+1). The network decodes both "What is this word?" and "Where is it?" at the exact same time!
     sentence_embedding = E[tokens] + P
 
     #From that we generate the values for Q, K, V. These are deterministic projections, the weights (W_q, W_k, W_v) are what we randomized
