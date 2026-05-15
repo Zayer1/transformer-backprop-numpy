@@ -2,7 +2,7 @@
 
 > **⚠️ Work in Progress:** This repository is actively being built. The current files represent partial milestones towards a complete Transformer Block.
 
-A pedagogical, from-scratch implementation of a Generative Pre-trained Transformer (GPT) block and its full backpropagation calculus in pure Python/NumPy. 
+A pure NumPy implementation of multi-head attention with complete manual backpropagation, including the derivation of the softmax Jacobian and gradient flow through causal masks.
 
 ## Overview
 Modern deep learning frameworks like PyTorch and TensorFlow abstract away the complex calculus and gradient flow of neural networks. While `import torch.nn as nn` is standard for production, relying exclusively on auto-grad engines can leave engineers with a shallow understanding of the underlying architecture.
