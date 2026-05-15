@@ -65,13 +65,13 @@ W_k = np.random.randn(embedding_dim, embedding_dim)
 W_v = np.random.randn(embedding_dim, embedding_dim)
 
 for epoch in range(1000):
-    # The Lookup (3, 3) + positional timestamp
+    # The Lookup (3, 6) + positional timestamp
     sentence_embedding = E[tokens] + P
 
-    #From that we generate the random values for Q, K, V. This is random so the training loop can have a start somewhere
-    Q = sentence_embedding @ W_q #Shape (3,3)
-    K = sentence_embedding @ W_k #Shape (3,3)
-    V = sentence_embedding @ W_v #Shape (3,3)
+    #From that we generate the values for Q, K, V. These are deterministic projections, the weights (W_q, W_k, W_v) are what we randomized
+    Q = sentence_embedding @ W_q #Shape (3,6)
+    K = sentence_embedding @ W_k #Shape (3,6)
+    V = sentence_embedding @ W_v #Shape (3,6)
 
     #Split Q,K and V into multiple heads
     #Head 1 gets the first 3 columns
@@ -212,7 +212,7 @@ for epoch in range(1000):
     #Update rule
     W1 = W1 - lr * dW1
     b1 = b1 - lr * db1
-    W2 = W2 - lr*dW2
+    W2 = W2 - lr * dW2
     b2 = b2 - lr * db2
     W_q = W_q - lr * dW_q
     W_k = W_k - lr * dW_k

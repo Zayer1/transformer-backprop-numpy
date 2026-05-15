@@ -1,5 +1,7 @@
 # Transformer Block from Scratch (Pure NumPy)
 
+> **⚠️ Work in Progress:** This repository is actively being built. The current files represent partial milestones towards a complete Transformer Block.
+
 A pedagogical, from-scratch implementation of a Generative Pre-trained Transformer (GPT) block and its full backpropagation calculus in pure Python/NumPy. 
 
 ## Overview
